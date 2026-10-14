@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff9e5">
+  <title>네컷 스튜디오 — 오늘의 순간을 네 장으로</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="네컷 스튜디오 홈"><span class="brand-mark">4</span><span>fourcut<span class="brand-dot">.</span></span></a>
+  </header>
+
+  <main id="top">
+    <section class="intro">
+      <div class="eyebrow"><span>✳</span> YOUR LITTLE PHOTO STUDIO</div>
+      <h1>오늘의 순간을<br><span>네 장으로</span></h1>
+      <p>갤러리의 사진으로, 혹은 지금 카메라로.<br>나만의 네컷 사진을 만들어보세요.</p>
+    </section>
+
+    <section class="studio" aria-label="네컷 사진 만들기">
+      <div class="studio-main">
+        <div class="section-head">
+          <div><div class="step-label">01 — MAKE YOUR CUT</div><h2>사진 만들기</h2></div>
+          <button id="resetBtn" class="text-button" type="button">초기화 <span>↺</span></button>
+        </div>
+
+        <div class="mode-tabs" role="tablist" aria-label="사진 입력 방식">
+          <button class="mode-tab active" id="uploadTab" role="tab" aria-selected="true" type="button"><span class="tab-icon">▧</span> 갤러리에서 가져오기</button>
+          <button class="mode-tab" id="cameraTab" role="tab" aria-selected="false" type="button"><span class="tab-icon">◎</span> 카메라로 촬영하기</button>
+        </div>
+
+        <div id="uploadPanel" class="panel">
+          <div class="upload-hint"><span class="hint-icon">↥</span><span><strong id="uploadTitle">사진 네 장을 선택해주세요</strong><small>프레임을 눌러 추가하고 화살표로 순서를 바꿔요</small></span><span class="count" id="photoCount">0 / 4</span></div>
+          <div class="slots" id="slots"></div>
+          <div id="photoAdjustments" class="photo-adjustments"></div>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden>
+          <p class="privacy-note"><span>⌑</span> 선택한 사진은 이 기기에서만 처리돼요.</p>
+        </div>
+
+        <div id="cameraPanel" class="panel hidden">
+          <div class="camera-stage">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="captureCanvas" hidden></canvas>
+            <div id="cameraPlaceholder" class="camera-placeholder"><span class="camera-illustration">◎</span><strong>카메라로 네 장을 찍어보세요</strong><small>카메라 권한을 허용하면 바로 시작할 수 있어요</small><button id="startCamera" class="dark-button" type="button">카메라 시작하기 <span>→</span></button></div>
+            <div id="shotBadge" class="shot-badge hidden"></div>
+          </div>
+          <div class="camera-controls"><span class="camera-tip" id="cameraTip">촬영한 사진은 아래 프레임에 담겨요</span><label class="timer-select">타이머<select id="timerSelect" aria-label="촬영 타이머"><option value="0">끄기</option><option value="3">3초</option><option value="5">5초</option><option value="10">10초</option></select></label><button id="captureBtn" class="capture-button" type="button" disabled><span></span><b>촬영</b></button><button id="stopCamera" class="text-button" type="button" disabled>카메라 끄기</button></div>
+          <div class="camera-thumbs" id="cameraThumbs"></div>
+          <p class="privacy-note"><span>⌑</span> 카메라 사진도 서버에 전송되지 않아요.</p>
+        </div>
+
+        <div class="options">
+          <div class="frame-layout-control">
+            <div class="option-label">FRAME LAYOUT <small>프레임 종류</small></div>
+            <div id="frameChoices" class="frame-choices" role="radiogroup" aria-label="프레임 종류"></div>
+          </div>
+          <div class="frame-photo-control">
+            <div class="option-label">FRAME PHOTO <small>프레임 배경 사진</small></div>
+            <div class="frame-photo-actions"><button id="chooseFramePhoto" class="frame-photo-button" type="button">배경 사진 선택</button><button id="clearFramePhoto" class="frame-photo-clear hidden" type="button">제거</button><span id="framePhotoName">선택 안 함 · 프레임은 흰색</span></div>
+            <input id="framePhotoInput" type="file" accept="image/*" hidden>
+            <small class="frame-photo-help">선택한 사진이 프레임 여백과 배경에 깔립니다.</small>
+          </div>
+          <div class="filter-control">
+            <div class="option-label">PHOTO FILTER <small>사진 필터</small></div>
+            <div class="filter-options" role="group" aria-label="사진 필터"><button class="filter-button selected" type="button" data-filter="color">기본 (컬러)</button><button class="filter-button" type="button" data-filter="grayscale">흑백</button></div>
+          </div>
+          <label class="caption-option"><span><b>날짜 넣기</b><small>프레임 아래에 오늘 날짜를 새겨요</small></span><input id="dateToggle" type="checkbox" checked><i></i></label>
+        </div>
+        <label class="caption-input"><span><b>프레임 문구</b><small>원하는 문구를 적어주세요. 비워두면 표시하지 않아요.</small></span><textarea id="captionInput" maxlength="48" rows="2" placeholder="예: 오늘도 반짝이는 우리"></textarea></label>
+        <div class="action-row"><button id="downloadBtn" class="download-button" type="button" disabled><span>↓</span> 사진 저장하기</button><small>고화질 JPG · 4컷 사진</small></div>
+        <p id="message" class="message" aria-live="polite">사진 네 장을 채우면 저장할 수 있어요.</p>
+      </div>
+
+      <aside class="preview-side">
+        <div class="preview-head"><div><div class="step-label">02 — PREVIEW</div><h2>미리보기</h2></div></div>
+        <div class="preview-well"><canvas id="previewCanvas" class="preview-canvas" aria-label="완성 사진 미리보기"></canvas></div>
+        <p class="preview-caption">미리보기는 실제 저장될 사진과 같아요.</p>
+        <div class="preview-meta"><span><i class="meta-icon">▥</i> <span id="layoutSummary">2 × 2 클래식</span></span><span id="imageDimensions">600 × 940 px</span></div>
+      </aside>
+    </section>
+
+    <footer><span>fourcut studio</span><span>MADE WITH LITTLE MOMENTS <b>✳</b></span></footer>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
